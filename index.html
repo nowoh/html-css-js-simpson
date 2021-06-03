@@ -1,6 +1,554 @@
-<html>
-  <title>마리오</title>
-  <body>
-    <h1>Hello World</h1>
-  </body>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <link href="http://fonts.cdnfonts.com/css/homer-simpson-revised" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&display=swap" rel="stylesheet">
+  <title>Homer Simpson</title>
+  <style>
+    html {
+      cursor: url("asset/marge.cur"), auto;
+    }
+
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+
+    #container {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border: 1px solid black;
+    }
+
+    #scored {
+      position: absolute;
+      right: 1%;
+      top: 1%;
+      width: 230px;
+      border: 3px solid #f6d20f;
+      border-radius: 10px;
+      background: transparent;
+      font-family: 'Homer Simpson Revised', sans-serif;
+      -webkit-text-stroke: 1px black;
+      color: #f6d20f;
+      /* vertical-align: middle; */
+      text-align: left;
+      font-size: 30px;
+      padding: 10px 25px;
+      z-index: 2;
+      animation-name: color-change;
+      animation-duration: 0.5s;
+      animation-iteration-count: infinite;
+      animation-timing-function: linear;
+    }
+
+    #scoring {
+      position: absolute;
+      right: 2.5%;
+      top: 2.5%;
+      font-family: 'Homer Simpson Revised', sans-serif;
+      -webkit-text-stroke: 1px black;
+      color: #f6d20f;
+      text-align: right;
+      font-size: 30px;
+      z-index: 2;
+    }
+
+    #homer {
+      position: absolute;
+      bottom: 10%;
+      left: 50px;
+      width: 13%;
+    }
+
+    #bart {
+      position: absolute;
+      width: 7%;
+      bottom: 10%;
+      right: 50px;
+      transform: scaleX(-1);
+    }
+
+    #donuts {
+      position: absolute;
+      width: 3%;
+      left: 13%;
+      bottom: 20%;
+      display: none;
+    }
+
+    #background {
+      position: absolute;
+      width: 200%;
+      height: 100%;
+      background: url("asset/maple.png");
+      background-size: contain;
+      animation-name: bg-slide;
+      animation-duration: 30s;
+      animation-iteration-count: infinite;
+      animation-timing-function: linear;
+      z-index: -10;
+    }
+
+    #start_logo {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 2;
+    }
+
+    .buttons {
+      border: 3px solid #f6d20f;
+      border-radius: 10px;
+      width: 550px;
+      font-family: 'Homer Simpson Revised', sans-serif;
+      font-size: 100px;
+      color: #f6d20f;
+      background-color: transparent;
+      z-index: 2;
+      -webkit-text-stroke: 3px black;
+      text-shadow: -5px 5px 5px black;
+      cursor: url("asset/homer_face.cur"), auto;
+      animation-name: color-change;
+      animation-duration: 0.5s;
+      animation-iteration-count: infinite;
+      animation-timing-function: linear;
+    }
+
+    button:hover {
+      animation-play-state: paused;
+    }
+
+    #developer {
+      font-family: 'Homer Simpson Revised', sans-serif;
+      font-size: 50px;
+      color: #f6d20f;
+      z-index: 2;
+      -webkit-text-stroke: 3px black;
+      text-shadow: -3px 3px 5px black;
+    }
+
+    #game_guide {
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      border: 3px solid #f6d20f;
+      border-radius: 8px;
+      width: 850px;
+      font-family: 'Homer Simpson Revised', 'Gamja Flower', sans-serif;
+      font-size: 50px;
+      color: #f6d20f;
+      background-color: transparent;
+      padding: 0% 2%;
+      -webkit-text-stroke: 2px black;
+      display: none;
+    }
+
+    #go_Home {
+      position: absolute;
+      top: 80%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      border: 3px solid #f6d20f;
+      border-radius: 8px;
+      width: 930px;
+      font-family: 'Homer Simpson Revised', 'Gamja Flower', sans-serif;
+      font-size: 50px;
+      color: #f6d20f;
+      background-color: transparent;
+      padding: 0% 2%;
+      -webkit-text-stroke: 2px black;
+      display: none;
+      animation-name: color-change;
+      animation-duration: 0.5s;
+      animation-iteration-count: infinite;
+      animation-timing-function: linear;
+      cursor: url("asset/homer_face.cur"), auto;
+    }
+
+    #timer {
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      font-family: 'Homer Simpson Revised', sans-serif;
+      font-size: 150px;
+      color: #f6d20f;
+      -webkit-text-stroke: 5px black;
+      text-shadow: -5px 5px 5px black;
+    }
+
+    #gameover {
+      position: absolute;
+      width: 100%;
+      top: 40%;
+      left: 68%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      font-family: 'Homer Simpson Revised', sans-serif;
+      font-size: 230px;
+      color: #f6d20f;
+      -webkit-text-stroke: 5px black;
+      text-shadow: -5px 5px 5px black;
+    }
+
+    .gameover {
+      display: none;
+    }
+
+    #homer_h {
+      position: absolute;
+      width: 20%;
+      top: 4%;
+      left: 4%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      transform: rotate(-30deg);
+    }
+
+    #family {
+      position: absolute;
+      width: 400px;
+      top: 80%;
+      left: 80%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+
+    }
+
+    #coin {
+      position: absolute;
+      width: 100%;
+      top: 55%;
+      left: 72%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      font-family: 'Homer Simpson Revised', sans-serif;
+      font-size: 90px;
+      color: #f6d20f;
+      -webkit-text-stroke: 5px black;
+      text-shadow: -5px 5px 5px black;
+    }
+
+    #timer2 {
+      position: absolute;
+      top: 65%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      font-family: 'Homer Simpson Revised', sans-serif;
+      font-size: 120px;
+      color: #f6d20f;
+      -webkit-text-stroke: 5px black;
+      text-shadow: -5px 5px 5px black;
+      z-index: 2;
+    }
+
+    @keyframes bg-slide {
+      from {
+        background-position: 0px;
+      }
+
+      to {
+        background-position: -500px;
+      }
+    }
+
+    @keyframes color-change {
+      from {
+        border: 3px solid #f6d20f;
+      }
+
+      to {
+        border: 3px solid white;
+      }
+    }
+
+    @import url('http://fonts.cdnfonts.com/css/homer-simpson-revised');
+  </style>
+
+</head>
+
+<body>
+  <div id="container">
+    <span id="scored" class="shows">SCORE &nbsp;&nbsp;&nbsp;:</span>
+    <span id="scoring" class="shows">0</span>
+    <div id="background"></div>
+    <div id="start_logo">
+      <span><img src="asset/simpsons_logo.png" alt=""></span><br><br>
+      <button class="buttons" onclick="startgame()">Start Game</button><br><br>
+      <button class="buttons" onclick="guide()">Game Guide</button><br><br>
+      <span id="developer">Designed by<br> Lee Ho Won.</span>
+    </div>
+    <img src="asset/homer.gif" alt="호머심슨" id="homer" class="shows">
+    <img src="asset/skate.gif" alt="바트심슨" id="bart" class="shows">
+    <img src="asset/donuts.png" alt="도넛" id="donuts">
+    <span id="game_guide">
+      <ul>
+        <li>
+          다가오는 '바트 심슨'을 이겨라!<br>
+          점프하여 피하면 100점 획득!<br>
+          도넛을 던져 물리치면 200점 획득!
+        </li><br>
+        <li>
+          '바트 심슨'과 부딪히면 게임은 즉시 <br>
+          종료되며 별도로 저장은 되지 않습니다.
+        </li><br>
+        <li>
+          [ 조 작 방 법 ]<br>
+          점프 : Space 키<br>
+          공격 : D 키
+        </li>
+
+      </ul>
+    </span>
+    <button id="go_Home" onclick="goHome()">Home으로 돌아가기</button>
+    <span id="timer"></span>
+    <span id="gameover" class="gameover">GAME OVER</span>
+    <img src="asset/homer_howhow.gif" alt="" id="homer_h" class="gameover">
+    <img src="asset/simpson_family.png" alt="" id="family" class="gameover">
+    <span id="coin" class="gameover">INSERT COIN TO CONTINUE</span>
+    <span id="timer2" class="gameover"></span>
+
+  </div>
+
+  <script>
+    let homer = $("#homer");
+    let bart = $("#bart");
+    let donuts = $("#donuts");
+    let score = 0;  //스코어
+
+    //호머심슨 점프 & 도넛 움직임
+    let isJumping = false;
+    let isMoving = false;
+
+    function jump() {
+      isJumping = true;
+      homer.animate({
+        bottom: "+=20%"
+      }, 200).animate({
+        bottom: "-=20%"
+      }, 1000, function () {
+        isJumping = false;
+      });
+    }
+
+    //도넛으로 공격
+    function attack() {
+      isMoving = true;
+      if (donuts.css("display") == "none") {
+        donuts.show();
+        donuts.animate({
+          left: "+=120%"
+        }, 2500).animate({
+          left: "-=120%"
+        }, 0, function () {
+          donuts.css("display", "none");
+          isMoving = false;
+        });
+      }
+    }
+
+    //스페이스바 누르면 점프
+    $("body").keydown(function (event) {
+      switch (event.code) {
+        case "Space":
+          // 스페이스 연타 방지
+          if (isJumping == false) {
+            jump();
+          }
+          break;
+        case "KeyD":
+          // 쉬프트 연타 방지
+          if (isJumping == false || isMoving == false) {
+            attack();
+          }
+          break;
+      }
+    });
+
+    // random 함수
+    function getRandomInt(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min)) + min; //최댓값은 제외, 최솟값은 포함
+    }
+
+    let scoreCheck = true;    //점프했을 때 중복으로 점수 처리 안 해주는 boolean
+
+    //바트심슨 이동 (자동)
+    function enemyMove() {
+      setInterval(function () {
+        $("#bart").animate({
+          right: "120%"
+        }, getRandomInt(3000, 4000), function () {
+          $("#bart").css("right", "-200px");
+          scoreCheck = true;
+        });
+      }, getRandomInt(1500, 2500));
+    }
+
+    //호머 심슨 죽었는지 체크
+    function deadCheck() {
+      let isDead = false;
+
+      let homerRightX =
+        parseInt(homer.css("left").replace("px", "")) +
+        parseInt(homer.css("width").replace("px", "")) - 70;
+
+      let homerLeftX =
+        parseInt(homer.css("left").replace("px", ""));
+
+      let enemyLeftX =
+        parseInt(bart.css("left").replace("px", ""));
+
+      let homerBottomX =
+        parseInt(homer.css("bottom").replace("px", ""))
+        - 105.484;
+
+      let enemyTopX =
+        parseInt(bart.css("height").replace("px", ""));
+
+      //호머와 바트 위치 체크
+      if (homerRightX > enemyLeftX && homerLeftX < enemyLeftX) {
+        if (homerBottomX < enemyTopX) {
+          isDead = true;
+          // score = 0;
+          // $("#scoring").text(score);
+        } else if (scoreCheck == true) {
+          score += 100;
+          $("#scoring").text(score);
+          scoreCheck = false;
+        }
+      }
+      return isDead;
+    }
+
+    //바트 심슨 죽었는지 체크
+    function bartDeadCheck() {
+      let bartDead = false;
+
+      let donutsRightX =
+        parseInt(donuts.css("left").replace("px", "")) +
+        parseInt(donuts.css("width").replace("px", ""));
+
+      let donutsLeftX =
+        parseInt(donuts.css("left").replace("px", ""));
+
+      let enemyLeftX =
+        parseInt(bart.css("left").replace("px", ""));
+
+      //도넛과 바트 위치 체크
+      if (donutsRightX >= enemyLeftX && donutsLeftX <= enemyLeftX) {
+        bartDead = true;
+      }
+      return bartDead;
+    }
+
+    //가이드
+    function guide() {
+      if ($("#game_guide").css("display") == "none") {
+        $("#game_guide").show();
+        $("#go_Home").show();
+        $("#start_logo").hide();
+      }
+    }
+
+    //홈으로 다시 이동
+    function goHome() {
+      $("#game_guide").css("display", "none");
+      $("#go_Home").css("display", "none");
+      $("#start_logo").show();
+    }
+
+    let homorSound = new Audio("asset/homer_sound.mp3");
+    let bartSound = new Audio("asset/bart_sound.mp3");
+    let themeSong = new Audio("asset/simpson_theme.mp3");
+
+    //onload
+    $(function () {
+      $("#background").css("filter", "brightness(50%)");
+      $(".shows").hide();
+    })
+    //대략 30frame 화면 갱신
+    function startgame() {
+      $("#background").css("filter", "brightness(100%)");
+      $(".shows").show();
+      $("#start_logo").hide();
+      themeSong.play();
+
+      //카운트다운
+      let count = 4;
+      let counter = setInterval(timer3S, 1000);
+
+      function timer3S() {
+        count--;
+
+        if (count <= 0) {
+          clearInterval(counter);
+          document.getElementById("timer").innerHTML = "Game Start!!!";
+          setTimeout(function () {
+            document.getElementById("timer").innerHTML = "";
+          }, 800)
+          // document.getElementById("timer").innerHTML = "";
+          //프레임 맞춰서 반복
+          setInterval(function () {
+            //적 이동
+            enemyMove();
+            // console.log(score);
+            console.log(parseInt($("#donuts").css("left").replace("px", "")));
+            console.log(parseInt(donuts.css("width").replace("px", "")));
+
+            //호머 심슨 죽었는지 체크
+            if (deadCheck()) {
+              homorSound.play();
+              $("#background").css("filter", "brightness(50%)");
+              // bart animation stop(true, false) => animation all stop
+              $(".shows").hide();
+              $(".gameover").show();
+
+              //gameover 후 restart 카운트
+              let count1 = 11;
+              let counter1 = setInterval(timer5s, 1000);
+
+              function timer5s() {
+                count1--;
+                if (count1 <= 0) {
+                  clearInterval(counter1);
+                  window.location.reload();
+                }
+                document.getElementById("timer2").innerHTML = count1;
+              }
+            }
+
+            if (bartDeadCheck() && donuts.css("display") != "none") {
+              //바트 심슨 죽었는지 체크
+              bartSound.play();
+              bart.stop(false, true);
+              score += 200;
+              $("#scoring").text(score);
+              donuts.stop(false, true);
+            }
+          }, 1);
+          return;
+        }
+        document.getElementById("timer").innerHTML = count;
+      }
+    }
+  </script>
+</body>
+
 </html>
